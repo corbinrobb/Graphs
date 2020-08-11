@@ -30,12 +30,5 @@ def earliest_ancestor(ancestors, starting_node):
     if len(found_ancestors) == 1:
         return found_ancestors[0][-1]
     else:
-        farthest = []
-        max_length = 0
-        for l in found_ancestors:
-            if len(l) > max_length:
-                max_length = len(l)
-        for l in found_ancestors:
-            if len(l) == max_length:
-                farthest.append(l[-1])
-        return min(farthest)
+        max_length = max([len(path) for path in found_ancestors])
+        return min([path[-1] for path in found_ancestors if len(path) == max_length])
