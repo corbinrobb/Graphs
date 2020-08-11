@@ -1,19 +1,41 @@
+from queue import Queue
 
 def earliest_ancestor(ancestors, starting_node):
-    d = {}
+    graph = {}
 
     for node in ancestors:
-        if node[1] not in d:
-            d[node[1]] = [node[0]]
+        if node[1] not in graph:
+            graph[node[1]] = [node[0]]
         else:
-            d[node[1]].append(node[0])
+            graph[node[1]].append(node[0])
 
-    cur = starting_node
-
-    if cur not in d:
+    if starting_node not in graph:
         return -1
 
-    while cur in d:
-        cur = d[cur][0]
+    q = Queue()
+    q.put([starting_node])
 
-    return cur
+    found_ancestors = []
+
+    while not q.empty():
+        path = q.get()
+        vertex = path[-1]
+
+        if vertex not in graph:
+            found_ancestors.append(path)
+        else:
+            for parent in graph[vertex]:
+                q.put(path + [parent])
+
+    if len(found_ancestors) == 1:
+        return found_ancestors[0][-1]
+    else:
+        farthest = []
+        max_length = 0
+        for l in found_ancestors:
+            if len(l) > max_length:
+                max_length = len(l)
+        for l in found_ancestors:
+            if len(l) == max_length:
+                farthest.append(l[-1])
+        return min(farthest)
